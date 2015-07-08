@@ -64,7 +64,7 @@ public class MovieGridActivityFragment extends Fragment {
         if (networkInfo != null){
             GetMoviesTask task = new GetMoviesTask();
             task.execute("http://api.themoviedb.org/3/discover/" +
-                    "movie?sort_by=popularity.desc&api_key=da9e1ef0ef1889f59cc176eeae76099b");
+                    "movie?sort_by=popularity.desc&api_key=");
         }
         else{
             // show a dialog
