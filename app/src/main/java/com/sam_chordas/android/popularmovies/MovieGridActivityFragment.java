@@ -1,6 +1,7 @@
 package com.sam_chordas.android.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import org.json.JSONArray;
@@ -50,6 +52,22 @@ public class MovieGridActivityFragment extends Fragment {
 
 
         GridView gridView = (GridView) rootView.findViewById(R.id.movie_grid);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Movie movie = mMovieAdapter.getItem(position);
+                Bundle args = new Bundle();
+                args.putInt("id", movie.id);
+                args.putString("originalTitle", movie.originalTitle);
+                args.putString("overview", movie.overview);
+                args.putString("posterUrl", movie.posterUrl);
+                args.putString("releaseDate", movie.releaseDate);
+                args.putDouble("voteAverage", movie.voteAverage);
+                Intent intent = new Intent(getActivity(), MovieDetail.class);
+                intent.putExtras(args);
+                getActivity().startActivity(intent);
+            }
+        });
 
         gridView.setAdapter(mMovieAdapter);
 
@@ -64,7 +82,7 @@ public class MovieGridActivityFragment extends Fragment {
         if (networkInfo != null){
             GetMoviesTask task = new GetMoviesTask();
             task.execute("http://api.themoviedb.org/3/discover/" +
-                    "movie?sort_by=popularity.desc&api_key=");
+                    "movie?sort_by=popularity.desc&api_key=da9e1ef0ef1889f59cc176eeae76099b");
         }
         else{
             // show a dialog
@@ -82,6 +100,7 @@ public class MovieGridActivityFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
     }
+
 
     public class GetMoviesTask extends AsyncTask<String, Void, String>{
 

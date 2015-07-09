@@ -2,17 +2,20 @@ package com.sam_chordas.android.popularmovies;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
 public class MovieGridActivity extends ActionBarActivity {
 
+    public static final String LOG_TAG = MovieGridActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_grid);
+        Log.i(LOG_TAG, "onCreate");
 
     }
 
@@ -38,4 +41,35 @@ public class MovieGridActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i(LOG_TAG, "onPause");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i(LOG_TAG, "onDestroy");
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        Log.i(LOG_TAG, "onStop");
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.i(LOG_TAG, "onResume");
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        Log.i(LOG_TAG, "onStart");
+    }
+
 }
