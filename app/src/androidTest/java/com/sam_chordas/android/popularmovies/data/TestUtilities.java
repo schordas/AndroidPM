@@ -42,7 +42,22 @@ public class TestUtilities  extends AndroidTestCase {
     /*
         Students: Use this to create some default weather values for your database tests.
      */
-    static ContentValues createWeatherValues(long locationRowId) {
+    static ContentValues createTrailerValues(){
+        ContentValues trailerValues = new ContentValues();
+        trailerValues.put(MovieContract.TrailerEntry.COLUMN_URL_KEY, "fakeURL");
+
+        return trailerValues;
+    }
+
+    static ContentValues createReviewValues(){
+        ContentValues reviewValues = new ContentValues();
+        reviewValues.put(MovieContract.ReviewEntry.COLUMN_AUTHOR, "WhoWritesThisThings");
+        reviewValues.put(MovieContract.ReviewEntry.COLUMN_REVIEW, "You will see it no matter what I say");
+
+        return reviewValues;
+    }
+
+    static ContentValues createMovieValues(long locationRowId) {
         ContentValues movieValues = new ContentValues();
         movieValues.put(MovieContract.MovieEntry.COLUMN_DETS_KEY, locationRowId);
         movieValues.put(MovieContract.MovieEntry.COLUMN_DATE, TEST_DATE);
@@ -60,16 +75,15 @@ public class TestUtilities  extends AndroidTestCase {
         Students: You can uncomment this helper function once you have finished creating the
         LocationEntry part of the WeatherContract.
      */
-//    static ContentValues createNorthPoleLocationValues() {
-//        // Create a new map of values, where column names are the keys
-//        ContentValues testValues = new ContentValues();
-//        testValues.put(WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING, TEST_LOCATION);
-//        testValues.put(WeatherContract.LocationEntry.COLUMN_CITY_NAME, "North Pole");
-//        testValues.put(WeatherContract.LocationEntry.COLUMN_COORD_LAT, 64.7488);
-//        testValues.put(WeatherContract.LocationEntry.COLUMN_COORD_LONG, -147.353);
-//
-//        return testValues;
-//    }
+    static ContentValues createFakeDetailValues(long reviewRowId, long trailerRowId) {
+        // Create a new map of values, where column names are the keys
+        ContentValues testValues = new ContentValues();
+        testValues.put(MovieContract.DetailEntry.COLUMN_RUNTIME, 120);
+        testValues.put(MovieContract.DetailEntry.COLUMN_REV_KEY, reviewRowId);
+        testValues.put(MovieContract.DetailEntry.COLUMN_TRLR_KEY, trailerRowId);
+
+        return testValues;
+    }
 
     /*
         Students: You can uncomment this function once you have finished creating the
@@ -77,12 +91,12 @@ public class TestUtilities  extends AndroidTestCase {
      */
 //    static long insertNorthPoleLocationValues(Context context) {
 //        // insert our test records into the database
-//        WeatherDbHelper dbHelper = new WeatherDbHelper(context);
+//        MovieDbHelper dbHelper= new MovieDbHelper(context);
 //        SQLiteDatabase db = dbHelper.getWritableDatabase();
-//        ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
+//        ContentValues testValues = TestUtilities.createFakeDetailValues();
 //
 //        long locationRowId;
-//        locationRowId = db.insert(WeatherContract.LocationEntry.TABLE_NAME, null, testValues);
+//        locationRowId = db.insert(MovieContract.DetailEntry.TABLE_NAME, null, testValues);
 //
 //        // Verify we got a row back.
 //        assertTrue("Error: Failure to insert North Pole Location Values", locationRowId != -1);
