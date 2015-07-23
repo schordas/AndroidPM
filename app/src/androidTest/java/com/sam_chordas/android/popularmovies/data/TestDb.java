@@ -28,6 +28,8 @@ public class TestDb extends AndroidTestCase {
         final HashSet<String> tableNameHashSet = new HashSet<String>();
         tableNameHashSet.add(MovieContract.DetailEntry.TABLE_NAME);
         tableNameHashSet.add(MovieContract.MovieEntry.TABLE_NAME);
+        tableNameHashSet.add(MovieContract.ReviewEntry.TABLE_NAME);
+        tableNameHashSet.add(MovieContract.TrailerEntry.TABLE_NAME);
 
         mContext.deleteDatabase(MovieDbHelper.DATABASE_NAME);
         SQLiteDatabase db = new MovieDbHelper(
@@ -47,33 +49,66 @@ public class TestDb extends AndroidTestCase {
 
         // if this fails, it means that your database doesn't contain both the location entry
         // and weather entry tables
-        assertTrue("Error: Your database was created without both the location entry and weather entry tables",
+        assertTrue("Error: Your database was created without the movie entry and detail entry tables",
                 tableNameHashSet.isEmpty());
 
         // now, do our tables contain the correct columns?
-        c = db.rawQuery("PRAGMA table_info(" + MovieContract.DetailEntry.TABLE_NAME + ")",
+        c = db.rawQuery("PRAGMA table_info(" + MovieContract.MovieEntry.TABLE_NAME + ")",
                 null);
 
         assertTrue("Error: This means that we were unable to query the database for table information.",
                 c.moveToFirst());
 
-        // Build a HashSet of all of the column names we want to look for
-        final HashSet<String> detailColumnHashSet = new HashSet<String>();
-        detailColumnHashSet.add(MovieContract.DetailEntry._ID);
-        detailColumnHashSet.add(MovieContract.DetailEntry.COLUMN_RUNTIME);
-        detailColumnHashSet.add(MovieContract.DetailEntry.COLUMN_REV_KEY);
-        detailColumnHashSet.add(MovieContract.DetailEntry.COLUMN_TRLR_KEY);
+        final HashSet<String> movieColumnHashSet = new HashSet<String>();
+        movieColumnHashSet.add(MovieContract.MovieEntry._ID);
+        movieColumnHashSet.add(MovieContract.MovieEntry.COLUMN_DETS_KEY);
+        movieColumnHashSet.add(MovieContract.MovieEntry.COLUMN_MOVIE_ID);
+        movieColumnHashSet.add(MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE);
+        movieColumnHashSet.add(MovieContract.MovieEntry.COLUMN_OVERVIEW);
+        movieColumnHashSet.add(MovieContract.MovieEntry.COLUMN_POSTER_URL);
+        movieColumnHashSet.add(MovieContract.MovieEntry.COLUMN_RELEASE_DATE);
+        movieColumnHashSet.add(MovieContract.MovieEntry.COLUMN_VOTE_AVG);
+        movieColumnHashSet.add(MovieContract.MovieEntry.COLUMN_DATE);
 
         int columnNameIndex = c.getColumnIndex("name");
         do {
             String columnName = c.getString(columnNameIndex);
-            detailColumnHashSet.remove(columnName);
-        } while(c.moveToNext());
+            movieColumnHashSet.remove(columnName);
+        }
+        while(c.moveToNext());
+
+        assertTrue("Error: The db doesn't contain all of the required movie entry columns",
+                movieColumnHashSet.isEmpty());
+
+
+
+        // Build a HashSet of all of the column names we want to look for
+        final HashSet<String> detailColumnHashSet = new HashSet<String>();
+        detailColumnHashSet.add(MovieContract.DetailEntry._ID);
+        detailColumnHashSet.add(MovieContract.DetailEntry.COLUMN_RUNTIME);
+        detailColumnHashSet.add(MovieContract.DetailEntry.COLUMN_MOVIE_ID);
+        detailColumnHashSet.add(MovieContract.DetailEntry.COLUMN_REV_KEY);
+        detailColumnHashSet.add(MovieContract.DetailEntry.COLUMN_TRLR_KEY);
+
+
 
         // if this fails, it means that your database doesn't contain all of the required location
         // entry columns
-        assertTrue("Error: The database doesn't contain all of the required location entry columns",
-                detailColumnHashSet.isEmpty());
+
+
+        final HashSet<String> reviewColumnHashSet = new HashSet<String>();
+        reviewColumnHashSet.add(MovieContract.ReviewEntry._ID);
+        reviewColumnHashSet.add(MovieContract.ReviewEntry.COLUMN_AUTHOR);
+        reviewColumnHashSet.add(MovieContract.ReviewEntry.COLUMN_REVIEW_NAME);
+        reviewColumnHashSet.add(MovieContract.ReviewEntry.COLUMN_REVIEW);
+
+
+
+
+        final HashSet<String> trailerColumnHashSet = new HashSet<String>();
+        trailerColumnHashSet.add(MovieContract.TrailerEntry._ID);
+        trailerColumnHashSet.add(MovieContract.TrailerEntry.COLUMN_TRAILER_NAME);
+        trailerColumnHashSet.add(MovieContract.TrailerEntry.COLUMN_URL_KEY);
         db.close();
     }
 
@@ -187,6 +222,7 @@ public class TestDb extends AndroidTestCase {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues movieValues = TestUtilities.createMovieValues(detailRowId);
+        assertTrue(detailRowId != -1);
 
         long movieRowId = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, movieValues);
 
@@ -212,9 +248,9 @@ public class TestDb extends AndroidTestCase {
         dbHelper.close();
     }
 
-    public void testDetailTable(){
-        insertDetail();
-    }
+//    public void testDetailTable(){
+//        insertDetail();
+//    }
 
 
 }

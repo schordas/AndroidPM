@@ -27,6 +27,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sam_chordas.android.popularmovies.MovieGridActivity" />
         </activity>
+        <provider
+            android:authorities="com.sam_chordas.android.popularmovies.app"
+            android:name=".data.MovieProvider"
+            android:exported="false"
+            android:syncable="true"/>
+        <service android:name=".service.MovieService"/>
     </application>
 
 </manifest>

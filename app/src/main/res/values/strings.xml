@@ -5,4 +5,9 @@
 
     <string name="action_share">Share</string>
     <string name="title_activity_movie_detail">MovieDetail</string>
+    <string name="movie_api_key">api_key=da9e1ef0ef1889f59cc176eeae76099b</string>
+    <string name="popularity_base_url">http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc</string>
+    <string name="movie_base_url">http://api.themoviedb.org/3/movie/</string>
+    <string name="videos">videos</string>
+    <string name="reviews">reviews</string>
 </resources>

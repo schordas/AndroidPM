@@ -1,8 +1,10 @@
 package com.sam_chordas.android.popularmovies.data;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -44,13 +46,50 @@ public class TestUtilities  extends AndroidTestCase {
      */
     static ContentValues createTrailerValues(){
         ContentValues trailerValues = new ContentValues();
+        trailerValues.put(MovieContract.TrailerEntry.COLUMN_TRAILER_NAME, "Trailer 1");
         trailerValues.put(MovieContract.TrailerEntry.COLUMN_URL_KEY, "fakeURL");
 
         return trailerValues;
     }
 
+    static ContentValues[] createToyStory(){
+        ContentValues reviewValues = new ContentValues();
+        ContentValues trailerValues = new ContentValues();
+        ContentValues detailValues = new ContentValues();
+        ContentValues movieValues = new ContentValues();
+        ContentValues [] allValues = new ContentValues[4];
+
+        reviewValues.put(MovieContract.ReviewEntry.COLUMN_REVIEW_NAME, "Review1");
+        reviewValues.put(MovieContract.ReviewEntry.COLUMN_AUTHOR, "Buzz");
+        reviewValues.put(MovieContract.ReviewEntry.COLUMN_REVIEW, "Best Movie EVER!");
+
+        trailerValues.put(MovieContract.TrailerEntry.COLUMN_TRAILER_NAME, "Trailer1");
+        trailerValues.put(MovieContract.TrailerEntry.COLUMN_URL_KEY, "fakeurl");
+
+        detailValues.put(MovieContract.DetailEntry.COLUMN_MOVIE_ID, 123);
+        detailValues.put(MovieContract.DetailEntry.COLUMN_RUNTIME, "120min");
+        detailValues.put(MovieContract.DetailEntry.COLUMN_REV_KEY, 25);
+        detailValues.put(MovieContract.DetailEntry.COLUMN_TRLR_KEY, 8);
+
+        movieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, 1234);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE, "Toy Story");
+        movieValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, "Pixar's first!");
+        movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER_URL, "fake_poster_url");
+        movieValues.put(MovieContract.MovieEntry.COLUMN_VOTE_AVG, "9.9");
+        movieValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, "1995");
+
+
+        allValues[0] = trailerValues;
+        allValues[1] = reviewValues;
+        allValues[2] = detailValues;
+        allValues[3] = movieValues;
+
+        return allValues;
+    }
+
     static ContentValues createReviewValues(){
         ContentValues reviewValues = new ContentValues();
+        reviewValues.put(MovieContract.ReviewEntry.COLUMN_REVIEW_NAME, "Review 1");
         reviewValues.put(MovieContract.ReviewEntry.COLUMN_AUTHOR, "WhoWritesThisThings");
         reviewValues.put(MovieContract.ReviewEntry.COLUMN_REVIEW, "You will see it no matter what I say");
 
@@ -61,7 +100,7 @@ public class TestUtilities  extends AndroidTestCase {
         ContentValues movieValues = new ContentValues();
         movieValues.put(MovieContract.MovieEntry.COLUMN_DETS_KEY, locationRowId);
         movieValues.put(MovieContract.MovieEntry.COLUMN_DATE, TEST_DATE);
-        movieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, 1);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, 1234);
         movieValues.put(MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE, "Jaws");
         movieValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, "CAGE GO IN THE WATER?...SHARK IN THE WATER.");
         movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER_URL, "something");
@@ -79,6 +118,7 @@ public class TestUtilities  extends AndroidTestCase {
         // Create a new map of values, where column names are the keys
         ContentValues testValues = new ContentValues();
         testValues.put(MovieContract.DetailEntry.COLUMN_RUNTIME, 120);
+        testValues.put(MovieContract.DetailEntry.COLUMN_MOVIE_ID, 1456);
         testValues.put(MovieContract.DetailEntry.COLUMN_REV_KEY, reviewRowId);
         testValues.put(MovieContract.DetailEntry.COLUMN_TRLR_KEY, trailerRowId);
 
@@ -89,20 +129,25 @@ public class TestUtilities  extends AndroidTestCase {
         Students: You can uncomment this function once you have finished creating the
         LocationEntry part of the WeatherContract as well as the WeatherDbHelper.
      */
-//    static long insertNorthPoleLocationValues(Context context) {
-//        // insert our test records into the database
-//        MovieDbHelper dbHelper= new MovieDbHelper(context);
-//        SQLiteDatabase db = dbHelper.getWritableDatabase();
-//        ContentValues testValues = TestUtilities.createFakeDetailValues();
-//
-//        long locationRowId;
-//        locationRowId = db.insert(MovieContract.DetailEntry.TABLE_NAME, null, testValues);
-//
-//        // Verify we got a row back.
-//        assertTrue("Error: Failure to insert North Pole Location Values", locationRowId != -1);
-//
-//        return locationRowId;
-//    }
+    static long insertFakeDetailValues(Context context) {
+        // insert our test records into the database
+        MovieDbHelper dbHelper= new MovieDbHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues reviewValues = TestUtilities.createReviewValues();
+        ContentValues trailerValues = TestUtilities.createTrailerValues();
+        long reviewRowId = db.insert(MovieContract.ReviewEntry.TABLE_NAME, null, reviewValues);
+        long trailerRowId = db.insert(MovieContract.TrailerEntry.TABLE_NAME, null, trailerValues);
+
+        ContentValues testValues = TestUtilities.createFakeDetailValues(reviewRowId, trailerRowId);
+
+        long detailRowId;
+        detailRowId = db.insert(MovieContract.DetailEntry.TABLE_NAME, null, testValues);
+
+        // Verify we got a row back.
+        assertTrue("Error: Failure to insert Fake Values Values", detailRowId != -1);
+
+        return detailRowId;
+    }
 
     /*
         Students: The functions we provide inside of TestProvider use this utility class to test
